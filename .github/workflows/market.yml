@@ -1,1 +1,24 @@
+name: Market Check
 
+on:
+  schedule:
+    - cron: '0 23 * * 0-4'  # 日本時間 毎朝8時（平日）
+  workflow_dispatch:  # 手動実行も可能
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install yfinance pandas
+      - run: python market.py > result.txt
+      - name: Commit result
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add result.txt
+          git commit -m "Update market data" || exit 0
+          git push
