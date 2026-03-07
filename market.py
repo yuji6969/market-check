@@ -22,21 +22,31 @@ def check_stock(ticker, name, currency="$"):
         trend = "↑ 上げ局面（25日平均を上回っている）"
     else:
         trend = "↓ 下げ局面（25日平均を下回っている）"
-    if currency == "円":
-        lines.append(f"【{name}】\n  現在値: {latest:.0f}円\n  前日比: {change:+.2f}%\n  1ヶ月高値: {high:.0f}円 / 安値: {low:.0f}円\n  トレンド: {trend}\n  出来高: 平均比 {volume_ratio:.0f}%\n")
+    if volume_ratio >= 200:
+        volume_comment = "⚠️ 非常に活発（大きな動きの可能性）"
+    elif volume_ratio >= 150:
+        volume_comment = "📈 活発（何か動きあり・注目）"
+    elif volume_ratio >= 80:
+        volume_comment = "✅ 普通"
+    elif volume_ratio >= 50:
+        volume_comment = "😴 やや閑散（様子見）"
     else:
-        lines.append(f"【{name}】\n  現在値: ${latest:.2f}\n  前日比: {change:+.2f}%\n  1ヶ月高値: ${high:.2f} / 安値: ${low:.2f}\n  トレンド: {trend}\n  出来高: 平均比 {volume_ratio:.0f}%\n")
+        volume_comment = "💤 閑散（動きなし）"
+    if currency == "円":
+        lines.append(f"【{name}】\n  現在値: {latest:.0f}円\n  前日比: {change:+.2f}%\n  1ヶ月高値: {high:.0f}円 / 安値: {low:.0f}円\n  トレンド: {trend}\n  出来高: 平均比 {volume_ratio:.0f}% → {volume_comment}\n")
+    else:
+        lines.append(f"【{name}】\n  現在値: ${latest:.2f}\n  前日比: {change:+.2f}%\n  1ヶ月高値: ${high:.2f} / 安値: ${low:.2f}\n  トレンド: {trend}\n  出来高: 平均比 {volume_ratio:.0f}% → {volume_comment}\n")
 
 def check_vix():
     data = yf.download("^VIX", period="5d", interval="1d", progress=False)
     close = data["Close"].squeeze()
     latest = close.iloc[-1]
     if latest >= 30:
-        comment = "高水準（市場が不安定・調整局面）"
+        comment = "⚠️ 高水準（市場が不安定・調整局面）"
     elif latest >= 20:
-        comment = "やや高め（警戒・調整中の可能性）"
+        comment = "⚡ やや高め（警戒・調整中の可能性）"
     else:
-        comment = "落ち着いている（安定局面）"
+        comment = "✅ 落ち着いている（安定局面）"
     lines.append(f"【VIX指数（恐怖指数）】\n  現在値: {latest:.2f}\n  基準: 20以下=安定 / 20〜30=警戒 / 30以上=不安定\n  状態: {comment}\n")
 
 check_stock("^N225", "日経平均", "円")
