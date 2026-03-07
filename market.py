@@ -11,9 +11,7 @@ def check_stock(ticker, name, currency="$"):
     volume = data["Volume"].squeeze()
     latest = close.iloc[-1]
     prev = close.iloc[-2]
-    prev2 = close.iloc[-3]
     change = (latest - prev) / prev * 100
-    change2 = (prev - prev2) / prev2 * 100
     high = close.max()
     low = close.min()
     ma25 = close.rolling(window=25).mean().iloc[-1]
@@ -34,18 +32,10 @@ def check_stock(ticker, name, currency="$"):
         volume_comment = "😴 やや閑散（様子見）"
     else:
         volume_comment = "💤 閑散（動きなし）"
-
-    # 注目サインのチェック
-    alerts = []
-    if volume_ratio >= 80 and change > 0:
-        alerts.append("出来高が戻りプラス転換")
-    if change > 0 and change2 > 0:
-        alerts.append("2日連続プラス")
-
     if currency == "円":
-        lines.append(f"【{name}】\n  現在値: {latest:.0f}円\n  前日比: {change:+.2f}%\n  1ヶ月高値: {high:.0f}円 / 安値: {low:.0f}円\n  トレンド: {trend}\n  出来高: 平均比 {volume_ratio:.0f}% → {volume_comment}" + (f"\n  🔔 注目サイン：{'・'.join(alerts)}！" if alerts else "") + "\n")
+        lines.append(f"【{name}】\n  現在値: {latest:.0f}円\n  前日比: {change:+.2f}%\n  1ヶ月高値: {high:.0f}円 / 安値: {low:.0f}円\n  トレンド: {trend}\n  出来高: 平均比 {volume_ratio:.0f}% → {volume_comment}\n")
     else:
-        lines.append(f"【{name}】\n  現在値: ${latest:.2f}\n  前日比: {change:+.2f}%\n  1ヶ月高値: ${high:.2f} / 安値: ${low:.2f}\n  トレンド: {trend}\n  出来高: 平均比 {volume_ratio:.0f}% → {volume_comment}" + (f"\n  🔔 注目サイン：{'・'.join(alerts)}！" if alerts else "") + "\n")
+        lines.append(f"【{name}】\n  現在値: ${latest:.2f}\n  前日比: {change:+.2f}%\n  1ヶ月高値: ${high:.2f} / 安値: ${low:.2f}\n  トレンド: {trend}\n  出来高: 平均比 {volume_ratio:.0f}% → {volume_comment}\n")
 
 def check_vix():
     data = yf.download("^VIX", period="5d", interval="1d", progress=False)
@@ -57,8 +47,7 @@ def check_vix():
         comment = "⚡ やや高め（警戒・調整中の可能性）"
     else:
         comment = "✅ 落ち着いている（安定局面）"
-    vix_alert = "\n  🔔 VIX安定サイン：市場が落ち着いています。買いタイミングを検討！" if latest < 20 else ""
-    lines.append(f"【VIX指数（恐怖指数）】\n  現在値: {latest:.2f}\n  基準: 20以下=安定 / 20〜30=警戒 / 30以上=不安定\n  状態: {comment}{vix_alert}\n")
+    lines.append(f"【VIX指数（恐怖指数）】\n  現在値: {latest:.2f}\n  基準: 20以下=安定 / 20〜30=警戒 / 30以上=不安定\n  状態: {comment}\n")
 
 check_stock("^N225", "日経平均", "円")
 check_stock("^SOX", "SOX指数（半導体）")
