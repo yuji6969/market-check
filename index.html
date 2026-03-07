@@ -20,6 +20,40 @@ pre { background: #2a2a2a; padding: 20px; border-radius: 8px; white-space: pre-w
 </head>
 <body>
 <h1>📈 市場チェック</h1>
+  <div id="sq-info" style="background:#1c2128; border-left:4px solid #f0b429; padding:12px 16px; border-radius:8px; margin-bottom:20px; font-size:14px; color:#e0e0e0;">
+</div>
+<script>
+(function() {
+  function getNextSQ() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    for (let m = month; m <= month + 3; m++) {
+      const d = new Date(year, m, 1);
+      let friCount = 0;
+      for (let day = 1; day <= 31; day++) {
+        const dt = new Date(year, m, day);
+        if (dt.getMonth() !== m) break;
+        if (dt.getDay() === 5) {
+          friCount++;
+          if (friCount === 2) {
+            if (dt > now) {
+              const isMajor = [2,5,8,11].includes(m);
+              const diff = Math.ceil((dt - now) / (1000*60*60*24));
+              const label = isMajor ? "⚠️ メジャーSQ" : "📅 ミニSQ";
+              const warn = diff <= 7 ? " ← 今週！注意" : "";
+              document.getElementById('sq-info').innerHTML =
+                `${label}： ${year}年${m+1}月${day}日（あと${diff}日）${warn}`;
+              return;
+            }
+          }
+        }
+      }
+    }
+  }
+  getNextSQ();
+})();
+</script>
 
 <div class="stock-row">
   <span class="stock-name">📊 日経平均</span>
