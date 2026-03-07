@@ -8,31 +8,68 @@
 body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #e0e0e0; }
 h1 { color: #4fc3f7; }
 pre { background: #2a2a2a; padding: 20px; border-radius: 8px; white-space: pre-wrap; }
-.links { margin-bottom: 20px; }
-.links a {
-  display: inline-block;
-  margin: 5px;
-  padding: 8px 14px;
-  background: #2a2a2a;
-  color: #4fc3f7;
+.stock-row { display: flex; align-items: center; margin: 6px 0; flex-wrap: wrap; gap: 6px; }
+.stock-name { color: #e0e0e0; min-width: 180px; font-size: 14px; }
+.btn-chart {
+  padding: 6px 12px;
+  background: #1565c0;
+  color: #fff;
   text-decoration: none;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 13px;
 }
-.links a:hover { background: #3a3a3a; }
+.btn-kabutan {
+  padding: 6px 12px;
+  background: #2e7d32;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.btn-chart:hover { background: #1976d2; }
+.btn-kabutan:hover { background: #388e3c; }
 </style>
 </head>
 <body>
 <h1>📈 市場チェック</h1>
-<div class="links">
-  <a href="https://jp.tradingview.com/chart/?symbol=TVC:NI225" target="_blank">📊 日経平均</a>
-  <a href="https://jp.tradingview.com/chart/?symbol=NASDAQ:SOX" target="_blank">📊 SOX指数</a>
-  <a href="https://jp.tradingview.com/chart/?symbol=NASDAQ:NVDA" target="_blank">📊 NVDA</a>
-  <a href="https://jp.tradingview.com/chart/?symbol=TSE:8035" target="_blank">📊 東京エレクトロン</a>
-  <a href="https://jp.tradingview.com/chart/?symbol=TSE:6146" target="_blank">📊 ディスコ</a>
-  <a href="https://jp.tradingview.com/chart/?symbol=TSE:9501" target="_blank">📊 東京電力</a>
-  <a href="https://jp.tradingview.com/chart/?symbol=TVC:VIX" target="_blank">📊 VIX</a>
+
+<div class="stock-row">
+  <span class="stock-name">📊 日経平均</span>
+  <a class="btn-chart" href="https://jp.tradingview.com/chart/?symbol=TVC:NI225" target="_blank">チャート</a>
+  <a class="btn-kabutan" href="https://kabutan.jp/stock/chart?code=0000" target="_blank">株探</a>
 </div>
+<div class="stock-row">
+  <span class="stock-name">📊 SOX指数</span>
+  <a class="btn-chart" href="https://jp.tradingview.com/chart/?symbol=NASDAQ:SOX" target="_blank">チャート</a>
+  <a class="btn-kabutan" href="https://jp.investing.com/indices/phlx-semiconductor" target="_blank">株探</a>
+</div>
+<div class="stock-row">
+  <span class="stock-name">📊 NVDA</span>
+  <a class="btn-chart" href="https://jp.tradingview.com/chart/?symbol=NASDAQ:NVDA" target="_blank">チャート</a>
+  <a class="btn-kabutan" href="https://kabutan.jp/stock/chart?code=NVDA" target="_blank">株探</a>
+</div>
+<div class="stock-row">
+  <span class="stock-name">📊 VIX</span>
+  <a class="btn-chart" href="https://jp.tradingview.com/chart/?symbol=TVC:VIX" target="_blank">チャート</a>
+  <a class="btn-kabutan" href="https://jp.investing.com/indices/volatility-s-p-500" target="_blank">Investing</a>
+</div>
+<div class="stock-row">
+  <span class="stock-name">📊 東京エレクトロン</span>
+  <a class="btn-chart" href="https://jp.tradingview.com/chart/?symbol=TSE:8035" target="_blank">チャート</a>
+  <a class="btn-kabutan" href="https://kabutan.jp/stock/chart?code=8035" target="_blank">株探</a>
+</div>
+<div class="stock-row">
+  <span class="stock-name">📊 ディスコ</span>
+  <a class="btn-chart" href="https://jp.tradingview.com/chart/?symbol=TSE:6146" target="_blank">チャート</a>
+  <a class="btn-kabutan" href="https://kabutan.jp/stock/chart?code=6146" target="_blank">株探</a>
+</div>
+<div class="stock-row">
+  <span class="stock-name">📊 東京電力</span>
+  <a class="btn-chart" href="https://jp.tradingview.com/chart/?symbol=TSE:9501" target="_blank">チャート</a>
+  <a class="btn-kabutan" href="https://kabutan.jp/stock/chart?code=9501" target="_blank">株探</a>
+</div>
+
+<br>
 <pre id="result">読み込み中...</pre>
 <script>
 fetch('result.txt?t=' + Date.now())
